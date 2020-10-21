@@ -38,7 +38,7 @@ class TemporalShelf
      */
     protected string $timezone;
 
-    public function __construct(string $shelfDirectory, string $directoryPattern = '%Y/%m/%d', string $filePrefixPattern = '%s_', string $timezone = 'UTC')
+    public function __construct(string $shelfDirectory, string $directoryPattern = 'Y/m/d', string $filePrefixPattern = 'U_', string $timezone = 'UTC')
     {
         $this->shelfDirectory = $shelfDirectory;
         $this->directoryPattern = $directoryPattern;
@@ -46,14 +46,45 @@ class TemporalShelf
         $this->timezone = $timezone;
     }
 
+    /**
+     * Copy a file to the shelve
+     * 
+     * Overwrites any existing file if it happens to have the same filename.
+     * 
+     * @param string $filename Full path to the file
+     * @param int $timestamp Timestamp of the file
+     * @return string Full path to the shelved file
+     * @throws Exception on any file errors
+     */
     public function shelveFile($filename, int $timestamp = null): string
     {
+        // Validate filename
+        if (!is_file($filename) || !is_readable($filename)) {
+            throw new \Exception("Filename '{$filename}' does not reference a file or is not readable");
+        }
+
         if (is_null($timestamp)) {
             $timestamp = time();
         }
 
-        // TODO implement this
-        $shelvedFilename = $filename;
+        $date = new \DateTime("@{$timestamp}", new \DateTimeZone($this->timezone));
+        $targetDirectory = $this->shelfDirectory . DIRECTORY_SEPARATOR . $date->format($this->directoryPattern);
+        $targetFilename = $date->format($this->filePrefixPattern) . basename($filename);
+        $shelvedFilename = $targetDirectory . DIRECTORY_SEPARATOR . $targetFilename;
+
+        if (!file_exists($targetDirectory)) {
+            $success = mkdir($targetDirectory, 0755, true);
+
+            if (!$success) {
+                throw new \Exception("Unable to create target directory '{$targetDirectory}'.");
+            }
+        }
+
+        $success = copy($filename, $shelvedFilename);
+
+        if (!$success) {
+            throw new \Exception("Unable to shelve file '{$filename}' to '{$shelvedFilename}'.");
+        }
 
         return $shelvedFilename;
     }
