@@ -38,12 +38,21 @@ class TemporalShelf
      */
     protected string $timezone;
 
-    public function __construct(string $shelfDirectory, string $directoryPattern = 'Y/m/d', string $filePrefixPattern = 'U_', string $timezone = 'UTC')
+    /**
+     * Overwrite option
+     * 
+     * OverwriteOption::ALLOW_OVERWRITE will silently overwrite files in the target directory.
+     * OverwriteOption::EXCEPTION_ON_OVERWRITE will throw an exception.
+     */
+    protected int $overwriteOption;
+
+    public function __construct(string $shelfDirectory, string $directoryPattern = 'Y/m/d', string $filePrefixPattern = 'U_', string $timezone = 'UTC', int $overwriteOption = Options\OverwriteOptions::EXCEPTION_ON_OVERWRITE)
     {
         $this->shelfDirectory = $shelfDirectory;
         $this->directoryPattern = $directoryPattern;
         $this->filePrefixPattern = $filePrefixPattern;
         $this->timezone = $timezone;
+        $this->overwriteOption = $overwriteOption;
     }
 
     /**
@@ -80,10 +89,25 @@ class TemporalShelf
             }
         }
 
+        // Check overwriting
+        if (file_exists($shelvedFilename)) {
+            switch ($this->overwriteOption) {
+                default:
+                    throw new \Exception("Undefined overwrite option set: '{$this->overwriteOption}', see OverwriteOptions enum for valid values.");
+
+                case Options\OverwriteOptions::ALLOW_OVERWRITE:
+                    // Overwriting allowed, do nothing.
+                    break;
+
+                case Options\OverwriteOptions::EXCEPTION_ON_OVERWRITE:
+                    throw new \Exception("Shelved file already exists, will not overwrite: '{$filename}' to '{$shelvedFilename}'.");
+            }
+        }
+
         $success = copy($filename, $shelvedFilename);
 
         if (!$success) {
-            throw new \Exception("Unable to shelve file '{$filename}' to '{$shelvedFilename}'.");
+            throw new \Exception("Unable to copy file '{$filename}' to '{$shelvedFilename}'.");
         }
 
         return $shelvedFilename;

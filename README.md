@@ -35,13 +35,13 @@ Both path (`$directoryPattern`) and prefix (`$prefixPattern`) can be configured 
 
 Example: Setting `$directoryPattern = "Y/W"` and `$prefixPattern = "N_"` would shelve the file to `/archive/2020/43/3_download.txt` (Generating a weekly directory per year).
 
-Files are silently overwritten if the generated filename already exists.
+By default will throw an exceptionn when a file is already exists in the shelve with the same target name. This can be configured with the `OverwriteOptions` values.
 
 Exceptions are thrown when the file is not readable, when the directory structure cannot be built or if the copying fails.
 
 Files are copied. The original file is left untouched and has to be cleaned up by yourself.
 
-### \_\_construct(string $shelfDirectory, string $directoryPattern = 'Y/m/d', string \$filePrefixPattern = 'U\_', string \$timezone = 'UTC')
+### \_\_construct(string $shelfDirectory, string $directoryPattern = 'Y/m/d', string \$filePrefixPattern = 'U\_', string \$timezone = 'UTC', int \$overwriteOption = Options\OverwriteOptions::EXCEPTION_ON_OVERWRITE)
 
 Creates the TemporalShelf object and sets the configuration.
 
@@ -52,6 +52,8 @@ Creates the TemporalShelf object and sets the configuration.
 `$filePrefixPattern` is the prefix added to the filename when shelving. Set it to `''` in order to disable the prefixing.
 
 `$timezone` is a timezone identifier used when converting the timestamp of the file to the directory path.
+
+`$overwriteOption` determines the behaviour when the target filename already exists in the shelf directory.
 
 Does not validate the shelf directory.
 
