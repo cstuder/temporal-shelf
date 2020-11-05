@@ -112,4 +112,54 @@ class TemporalShelf
 
         return $shelvedFilename;
     }
+
+    public function setShelfDirectory(string $shelfDirectory): void
+    {
+        $this->shelfDirectory = $shelfDirectory;
+    }
+
+    public function getShelfDirectory(): string
+    {
+        return $this->shelfDirectory;
+    }
+
+    public function setDirectoryPattern(string $directoryPattern): void
+    {
+        $this->directoryPattern = $directoryPattern;
+    }
+
+    public function getDirectoryPattern(): string
+    {
+        return $this->directoryPattern;
+    }
+
+    public function setFilePrefixPattern(string $filePrefixPattern): void
+    {
+        $this->filePrefixPattern = $filePrefixPattern;
+    }
+
+    public function getFilePrefixPattern(): string
+    {
+        return $this->filePrefixPattern;
+    }
+
+    public function setTimezone(string $timezone): void
+    {
+        $this->timezone = $timezone;
+    }
+
+    public function getTimezone(): string
+    {
+        return $this->timezone;
+    }
+
+    public function setOverwriteOption(int $overwriteOption): void
+    {
+        $this->overwriteOption = $overwriteOption;
+    }
+
+    public function getOverwriteOption(): int
+    {
+        return $this->overwriteOption;
+    }
 }
