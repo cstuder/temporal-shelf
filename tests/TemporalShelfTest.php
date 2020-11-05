@@ -79,10 +79,12 @@ class TemporalShelfTest extends TestCase
         $now = new \DateTime('now', new \DateTimeZone($shelf->getTimezone()));
 
         // Shelve file
-        $shelf->shelveFile($this->root->url() . DIRECTORY_SEPARATOR . self::TESTFILENAME, $now->getTimestamp());
+        $file1 = $shelf->shelveFile($this->root->url() . DIRECTORY_SEPARATOR . self::TESTFILENAME, $now->getTimestamp());
 
         // Shelve again at the same time
-        $shelf->shelveFile($this->root->url() . DIRECTORY_SEPARATOR . self::TESTFILENAME, $now->getTimestamp());
+        $file2 = $shelf->shelveFile($this->root->url() . DIRECTORY_SEPARATOR . self::TESTFILENAME, $now->getTimestamp());
+
+        $this->assertEquals($file1, $file2);
     }
 
     public function testOverwriteOptionException(): void
