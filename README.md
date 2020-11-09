@@ -41,6 +41,8 @@ Exceptions are thrown when the file is not readable, when the directory structur
 
 Files are copied. The original file is left untouched and has to be cleaned up by yourself.
 
+The library is intentionally kept simple and doesn't handle non-alphabetical directory or file prefix patterns well. Also keep the shelf directory unpolluted by other files.
+
 ### \_\_construct(string $shelfDirectory, string $directoryPattern = 'Y/m/d', string \$filePrefixPattern = 'U\_', string \$timezone = 'UTC', int \$overwriteOption = Options\OverwriteOptions::EXCEPTION_ON_OVERWRITE)
 
 Creates the TemporalShelf object and sets the configuration.
@@ -68,6 +70,12 @@ Returns the full path to the shelved file.
 Returns an array of paths to all files in the shelf directory. All files, not just shelved files.
 
 `$sortOrder` determines the order of the array (`ASCENDING|DESCENDING`).
+
+### findFreshestFile(): ?string
+
+Returns the path to the freshest file on the shelf. Returns `null` if no file is found.
+
+Shortcut for `findAllShelvedFiles(Options\SortOrderOptions::DESCENDING)[0]`.
 
 ## Testing
 

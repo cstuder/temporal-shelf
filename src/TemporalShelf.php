@@ -150,6 +150,16 @@ class TemporalShelf
         return $shelvedFiles;
     }
 
+    /**
+     * Find freshest file on the shelf
+     * 
+     * @return string|null  Path to the freshest file or null if none found.
+     */
+    public function findFreshestFile(): ?string
+    {
+        return $this->findAllShelvedFiles(Options\SortOrderOptions::DESCENDING)[0] ?? null;
+    }
+
     public function setShelfDirectory(string $shelfDirectory): void
     {
         $this->shelfDirectory = $shelfDirectory;

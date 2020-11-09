@@ -78,4 +78,26 @@ class TemporalShelfSortOrderTest extends TestCase
         $this->assertEquals($fileOne, $allFiles[2]);
         $this->assertEquals($fileThree, $allFiles[0]);
     }
+
+    public function testFindFreshestFileOnEmptyShelf(): void
+    {
+        $shelf = new TemporalShelf($this->root->url() . DIRECTORY_SEPARATOR . self::SHELVE_DIRECTORY);
+
+        $freshestFile = $shelf->findFreshestFile();
+
+        $this->assertNull($freshestFile);
+    }
+
+    public function testFindFreshestFile(): void
+    {
+        $shelf = new TemporalShelf($this->root->url() . DIRECTORY_SEPARATOR . self::SHELVE_DIRECTORY);
+
+        $fileTwo = $shelf->shelveFile($this->root->url() . DIRECTORY_SEPARATOR . self::TESTFILENAME, 2);
+        $fileOne = $shelf->shelveFile($this->root->url() . DIRECTORY_SEPARATOR . self::TESTFILENAME, 1);
+        $fileThree = $shelf->shelveFile($this->root->url() . DIRECTORY_SEPARATOR . self::TESTFILENAME, 10000000);
+
+        $freshestFile = $shelf->findFreshestFile();
+
+        $this->assertEquals($fileThree, $freshestFile);
+    }
 }
