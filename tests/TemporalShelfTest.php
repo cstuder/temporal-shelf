@@ -4,6 +4,9 @@ use PHPUnit\Framework\TestCase;
 use org\bovigo\vfs\vfsStream,
     org\bovigo\vfs\vfsStreamDirectory;
 
+use cstuder\TemporalShelf\TemporalShelf;
+use cstuder\TemporalShelf\Options;
+
 /**
  * Testing file shelving
  */
@@ -28,7 +31,7 @@ class TemporalShelfTest extends TestCase
     public function testTemporalShelf(): void
     {
         // Minimal options
-        $shelf = new \cstuder\TemporalShelf\TemporalShelf(
+        $shelf = new TemporalShelf(
             $this->root->url() . DIRECTORY_SEPARATOR . self::SHELVE_DIRECTORY
         );
         $now = new \DateTime('now', new \DateTimeZone($shelf->getTimezone()));
@@ -57,7 +60,7 @@ class TemporalShelfTest extends TestCase
         $this->expectException(Exception::class);
 
         // Minimal options
-        $shelf = new \cstuder\TemporalShelf\TemporalShelf(
+        $shelf = new TemporalShelf(
             $this->root->url() . DIRECTORY_SEPARATOR . self::SHELVE_DIRECTORY
         );
         $now = new \DateTime('now', new \DateTimeZone($shelf->getTimezone()));
@@ -72,10 +75,10 @@ class TemporalShelfTest extends TestCase
     public function testOverwriteOptionAllow(): void
     {
         // Minimal options
-        $shelf = new \cstuder\TemporalShelf\TemporalShelf(
+        $shelf = new TemporalShelf(
             $this->root->url() . DIRECTORY_SEPARATOR . self::SHELVE_DIRECTORY
         );
-        $shelf->setOverwriteOption(\cstuder\TemporalShelf\Options\OverwriteOptions::ALLOW_OVERWRITE);
+        $shelf->setOverwriteOption(Options\OverwriteOptions::ALLOW_OVERWRITE);
         $now = new \DateTime('now', new \DateTimeZone($shelf->getTimezone()));
 
         // Shelve file
@@ -92,10 +95,10 @@ class TemporalShelfTest extends TestCase
         $this->expectException(Exception::class);
 
         // Minimal options
-        $shelf = new \cstuder\TemporalShelf\TemporalShelf(
+        $shelf = new TemporalShelf(
             $this->root->url() . DIRECTORY_SEPARATOR . self::SHELVE_DIRECTORY
         );
-        $shelf->setOverwriteOption(\cstuder\TemporalShelf\Options\OverwriteOptions::EXCEPTION_ON_OVERWRITE);
+        $shelf->setOverwriteOption(Options\OverwriteOptions::EXCEPTION_ON_OVERWRITE);
         $now = new \DateTime('now', new \DateTimeZone($shelf->getTimezone()));
 
         // Shelve file
