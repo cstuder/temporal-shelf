@@ -4,6 +4,8 @@
 
 PHP package to shelve files in directory structures according to years/months/days.
 
+I.e. takes a file `data.txt` and copies it to `..../archive/2020/11/09/1604953664_data.txt`.
+
 Created for usage on [api.existenz.ch](https://api.existenz.ch) and indirectly on [Aare.guru](https://aare.guru). As of 2020 in productive use.
 
 ## Installation
