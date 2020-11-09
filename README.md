@@ -63,6 +63,12 @@ Shelves a file with the current configuration and an optional timestamp. If the 
 
 Returns the full path to the shelved file.
 
+### findAllShelvedFiles(int \$sortOrder = Options\SortOrderOptions::ASCENDING): array
+
+Returns an array of paths to all files in the shelf directory. All files, not just shelved files.
+
+`$sortOrder` determines the order of the array (`ASCENDING|DESCENDING`).
+
 ## Testing
 
 Run `composer test` to execute the PHPUnit test suite.
