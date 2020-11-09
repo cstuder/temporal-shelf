@@ -113,6 +113,43 @@ class TemporalShelf
         return $shelvedFilename;
     }
 
+    /**
+     * Get an array with paths to all files in the shelf directory,
+     * sorted alphabetically.
+     * 
+     * @param int $sortOrder Sort order of the array
+     * @return array Array of file paths
+     */
+    public function findAllShelvedFiles(int $sortOrder = Options\SortOrderOptions::ASCENDING): array
+    {
+        $shelvedFiles = [];
+
+        $iterator = new \RecursiveIteratorIterator(new \RecursiveDirectoryIterator($this->shelfDirectory));
+
+        foreach ($iterator as $file) {
+            if ($file->isDir()) {
+                continue;
+            }
+
+            $shelvedFiles[] = $file->getPathname();
+        }
+
+        switch ($sortOrder) {
+            default:
+                throw new \Exception("Unknown sort order: '{$sortOrder}'");
+
+            case Options\SortOrderOptions::ASCENDING:
+                sort($shelvedFiles);
+                break;
+
+            case Options\SortOrderOptions::DESCENDING:
+                rsort($shelvedFiles);
+                break;
+        }
+
+        return $shelvedFiles;
+    }
+
     public function setShelfDirectory(string $shelfDirectory): void
     {
         $this->shelfDirectory = $shelfDirectory;
