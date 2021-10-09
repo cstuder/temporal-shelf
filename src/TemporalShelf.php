@@ -167,11 +167,8 @@ class TemporalShelf
         return $this->findAllShelvedFiles(Options\SortOrderOptions::DESCENDING)[0] ?? null;
     }
 
-    /**
-     * @param string $path
-     * @return string
-     */
-    protected function getAbsolutePath($path) {
+    protected function getAbsolutePath(string $path): string
+    {
         $path = str_replace(array('/', '\\'), DIRECTORY_SEPARATOR, $path);
         $parts = array_filter(explode(DIRECTORY_SEPARATOR, $path), 'strlen');
         $absolutes = array();
@@ -188,11 +185,8 @@ class TemporalShelf
         return implode(DIRECTORY_SEPARATOR, $absolutes);
     }
 
-    /**
-     * @param string $url
-     * @return string
-     */
-    protected function getAbsolutePathByUrl($url) {
+    protected function getAbsolutePathByUrl(string $url): string
+    {
         $parsedUrl = parse_url($url);
         if (!empty($parsedUrl['scheme']) && !empty($parsedUrl['host']) && !empty($parsedUrl['path'])) {
             $url = $parsedUrl['scheme'] . '://' . $parsedUrl['host'] . (!empty($parsedUrl['port']) ? ':' . $parsedUrl['port'] : '') . '/';
