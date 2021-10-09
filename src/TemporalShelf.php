@@ -110,7 +110,10 @@ class TemporalShelf
             throw new \Exception("Unable to copy file '{$filename}' to '{$shelvedFilename}'.");
         }
 
-        return $shelvedFilename;
+        if (!empty(parse_url($shelvedFilename, PHP_URL_SCHEME))) {
+            return $this->getAbsolutePathByUrl($shelvedFilename);
+        }
+        return realpath($shelvedFilename);
     }
 
     /**
@@ -131,7 +134,11 @@ class TemporalShelf
                 continue;
             }
 
-            $shelvedFiles[] = $file->getPathname();
+            if (!empty(parse_url($file->getPathname(), PHP_URL_SCHEME))) {
+                $shelvedFiles[] = $this->getAbsolutePathByUrl($file->getPathname());
+            } else {
+                $shelvedFiles[] = realpath($file->getPathname());
+            }
         }
 
         switch ($sortOrder) {
@@ -158,6 +165,34 @@ class TemporalShelf
     public function findFreshestFile(): ?string
     {
         return $this->findAllShelvedFiles(Options\SortOrderOptions::DESCENDING)[0] ?? null;
+    }
+
+    protected function getAbsolutePath(string $path): string
+    {
+        $path = str_replace(array('/', '\\'), DIRECTORY_SEPARATOR, $path);
+        $parts = array_filter(explode(DIRECTORY_SEPARATOR, $path), 'strlen');
+        $absolutes = array();
+        foreach ($parts as $part) {
+            if ($part === '.') {
+                continue;
+            }
+            if ($part === '..') {
+                array_pop($absolutes);
+            } else {
+                $absolutes[] = $part;
+            }
+        }
+        return implode(DIRECTORY_SEPARATOR, $absolutes);
+    }
+
+    protected function getAbsolutePathByUrl(string $url): string
+    {
+        $parsedUrl = parse_url($url);
+        if (!empty($parsedUrl['scheme']) && !empty($parsedUrl['host']) && !empty($parsedUrl['path'])) {
+            $url = $parsedUrl['scheme'] . '://' . $parsedUrl['host'] . (!empty($parsedUrl['port']) ? ':' . $parsedUrl['port'] : '') . '/';
+            return $url . $this->getAbsolutePath($parsedUrl['path']);
+        }
+        return $url;
     }
 
     public function setShelfDirectory(string $shelfDirectory): void
