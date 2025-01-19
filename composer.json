@@ -22,7 +22,7 @@
   "require": {},
   "require-dev": {
     "phpunit/phpunit": "^9",
-    "mikey179/vfsstream": "1.6.8"
+    "mikey179/vfsstream": "^1.6"
   },
   "scripts": {
     "test": "vendor/bin/phpunit"
