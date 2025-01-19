@@ -61,11 +61,11 @@ class TemporalShelf
      * Overwrites any existing file if it happens to have the same filename.
      * 
      * @param string $filename Full path to the file
-     * @param int $timestamp Timestamp of the file
+     * @param ?int $timestamp Timestamp of the file
      * @return string Full path to the shelved file
      * @throws Exception on any file errors
      */
-    public function shelveFile($filename, int $timestamp = null): string
+    public function shelveFile($filename, ?int $timestamp = null): string
     {
         // Validate filename
         if (!is_file($filename) || !is_readable($filename)) {
